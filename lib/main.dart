@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Todo List',
       theme: ThemeData(
         // is not restarted.
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: TodoLists(),
@@ -27,27 +27,6 @@ class TodoLists extends StatefulWidget {
 
 class TodoListsState extends State<TodoLists> {
   final _lists = <String>[];
-  final controller =ScrollController();
-  double offset = 0;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    controller.addListener(onScroll);
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    controller.dispose();
-    super.dispose();
-  }
-
-  void onScroll() {
-    setState(() {
-      offset = (controller.hasClients) ? controller.offset : 0;
-    });
-  }
 
   Widget _makeTodoLists(){
     return ListView.builder(
@@ -60,7 +39,19 @@ class TodoListsState extends State<TodoLists> {
             
             return Dismissible(
               // Show a red background as the item is swiped away.
-              background: Container(color: Colors.red),
+              background: Container(
+                color: Colors.redAccent,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(Icons.delete, color: Colors.white),
+                      Text('Move to trash', style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                ),
+              ),
               key: Key(_lists[i]),
               onDismissed: (direction) {
                 String removeditem = _lists[index];
@@ -107,13 +98,13 @@ class TodoListsState extends State<TodoLists> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Manage Todo List'),
+        title: Text('Manage Todo List', style: TextStyle(color: Colors.white),),
       ),
       body: _makeTodoLists(),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateAddlist,
         tooltip: '추가',
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

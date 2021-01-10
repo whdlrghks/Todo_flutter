@@ -4,7 +4,7 @@ class AddList extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Todo List'),
+        title: Text('Add Todo List', style: TextStyle(color: Colors.white),),
       ),
       body: 
       Padding(
