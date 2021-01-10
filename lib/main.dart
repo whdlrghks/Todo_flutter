@@ -27,7 +27,27 @@ class TodoLists extends StatefulWidget {
 
 class TodoListsState extends State<TodoLists> {
   final _lists = <String>[];
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+  final controller =ScrollController();
+  double offset = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.addListener(onScroll);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    controller.dispose();
+    super.dispose();
+  }
+
+  void onScroll() {
+    setState(() {
+      offset = (controller.hasClients) ? controller.offset : 0;
+    });
+  }
 
   Widget _makeTodoLists(){
     return ListView.builder(
@@ -52,7 +72,9 @@ class TodoListsState extends State<TodoLists> {
                     .of(context)
                     .showSnackBar(SnackBar(content: Text("Finished the item!  " + removeditem)));
               },
-              child: ListTile(title: Text(_lists[i])),
+              child: Card(
+                child: ListTile(title: Text(_lists[i])),
+              )
             );
         
         }
