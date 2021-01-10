@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import './containers/addlist.dart';
+import './containers/detail.dart';
+import './containers/todo_item.dart';
 void main() {
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -26,7 +29,7 @@ class TodoLists extends StatefulWidget {
 }
 
 class TodoListsState extends State<TodoLists> {
-  final _lists = <String>[];
+  final _lists = <Todo>[];
 
   Widget _makeTodoLists(){
     return ListView.builder(
@@ -52,9 +55,9 @@ class TodoListsState extends State<TodoLists> {
                   ),
                 ),
               ),
-              key: Key(_lists[i]),
+              key: Key(_lists[i].title),
               onDismissed: (direction) {
-                String removeditem = _lists[index];
+                String removeditem = _lists[index].title;
                 setState(() {
                   _lists.removeAt(index);
                 });
@@ -64,7 +67,18 @@ class TodoListsState extends State<TodoLists> {
                     .showSnackBar(SnackBar(content: Text("Finished the item!  " + removeditem)));
               },
               child: Card(
-                child: ListTile(title: Text(_lists[i])),
+                child: ListTile(
+                  title: Text(_lists[i].title),
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        // 파라미터 todo로 tap된 index의 아이템을 전달
+                        builder: (context) => Detail(todo: _lists[index]),
+                      ),
+                    );
+                  },
+                  ),
               )
             );
         
@@ -74,24 +88,24 @@ class TodoListsState extends State<TodoLists> {
     );
   }
 
-  _addTodoItem(item) {
+  _addTodoItem(item, des) {
     setState(() {
-      _lists.add(item);
+
+      _lists.add(Todo(item,des));
     });
   }
 
   _navigateAddlist() async {
+    
     Map result = await Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (BuildContext context) {
           return AddList();
       }),
     );
-    
-    if(result != null  && result.containsKey('data')){
-      _addTodoItem(result['data']);
+    if(result != null  && result.containsKey('title')){
+      _addTodoItem(result['title'],result['des']);
     }
-
   }
 
   @override
